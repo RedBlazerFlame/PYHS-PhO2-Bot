@@ -1,0 +1,29 @@
+{
+  "name": "pyhs-pho2-bot",
+  "version": "1.0.0",
+  "description": "A Bot for the PhO2 Competition",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RedBlazerFlame/PYHS-PhO2-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RedBlazerFlame/PYHS-PhO2-Bot/issues"
+  },
+  "homepage": "https://github.com/RedBlazerFlame/PYHS-PhO2-Bot#readme",
+  "dependencies": {
+    "discord.js": "^13.5.1",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
