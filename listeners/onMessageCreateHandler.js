@@ -1,6 +1,6 @@
+import { parseArgs } from "../helpers/parseArgs.js";
 import { commandHandlers } from "../scripts/commandHandlers.js";
-// Setting Prefix
-const PREFIX = "p!";
+import { PREFIX } from "../scripts/prefix.js";
 export const onMessageCreateHandler = (client, message) => {
     if (message.content.startsWith(PREFIX)) {
         // This will take out the prefix to make reading the command easier
@@ -17,19 +17,34 @@ export const onMessageCreateHandler = (client, message) => {
             messageContentDelimited[0].slice(1).join(" "),
             ...messageContentDelimited.slice(1).map((entry) => entry.join(" ")),
         ].join("\n");
+        let parsedCommandArgs = parseArgs(commandArgs);
         // Handling Commands
-        /// If the command does not exist, do nothing
-        if (!commandHandlers.has(commandName))
-            return;
-        // Executing the command
-        const { status, errorDescription } = commandHandlers.get(commandName)({
-            client,
-            message,
-            commandName,
-            commandArgs,
-        });
-        if (status === "error") {
-            message.reply(`**Error**\n\nOh no... It seems like I encountered an error...\n\nError Description: ${errorDescription || "An unknown error occured"}`);
+        try {
+            // If the command does not exist, throw an error
+            if (!commandHandlers.has(commandName))
+                throw `Command ${commandName} does not exist. Do p!help for a list of all commands`;
+            // Fetching command handler data
+            const commandHandler = commandHandlers.get(commandName);
+            // Checking if command inputs have all required fields
+            for (let expectation in commandHandler.expects) {
+                if (commandArgs[expectation] === undefined) {
+                    throw `Command \`${commandName}\` expects a/an \`${expectation}\` field in the input.\n\nUsage of \`${commandName}\`: \`${commandHandler.usage}\`  --  ${commandHandler.description}`;
+                }
+            }
+            // Executing the command
+            const { status, errorDescription } = commandHandler.callback({
+                client,
+                message,
+                commandName,
+                commandArgs: parsedCommandArgs,
+                commandHandler,
+            });
+            if (status === "error") {
+                throw errorDescription;
+            }
+        }
+        catch (e) {
+            message.reply(`**Error**\n\nOh no... It seems like I encountered an error...\n\nError Description: ${e || "An unknown error occured"}`);
         }
     }
 };
