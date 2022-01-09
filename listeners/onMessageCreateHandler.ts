@@ -41,7 +41,7 @@ export const onMessageCreateHandler = (
 
             // Checking if command inputs have all required fields
             for (let expectation in commandHandler.expects) {
-                if (commandArgs[expectation] === undefined) {
+                if (parsedCommandArgs[expectation] === undefined) {
                     throw `Command \`${commandName}\` expects a/an \`${expectation}\` field in the input.\n\nUsage of \`${commandName}\`: \`${commandHandler.usage}\`  --  ${commandHandler.description}`;
                 }
             }
