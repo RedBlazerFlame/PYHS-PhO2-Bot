@@ -40,9 +40,10 @@ export const onMessageCreateHandler = (
             ) as CommandHandler;
 
             // Checking if command inputs have all required fields
-            for (let expectation in commandHandler.expects) {
+            for (let expectation of commandHandler.expects) {
+                console.log(expectation);
                 if (parsedCommandArgs[expectation] === undefined) {
-                    throw `Command \`${commandName}\` expects a/an \`${expectation}\` field in the input.\n\nUsage of \`${commandName}\`: \`${commandHandler.usage}\`  --  ${commandHandler.description}`;
+                    throw `Command \`${commandName}\` expects a/an \`${expectation}\` field in the input.\n\nUsage of \`${PREFIX}${commandName}\`: \`${commandHandler.usage}\`  --  ${commandHandler.description}`;
                 }
             }
 
@@ -55,7 +56,7 @@ export const onMessageCreateHandler = (
                 commandHandler,
             });
 
-            if (status === "error") {
+            if (status === "error" && errorDescription) {
                 throw errorDescription;
             }
         } catch (e) {

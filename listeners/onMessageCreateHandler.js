@@ -26,9 +26,10 @@ export const onMessageCreateHandler = (client, message) => {
             // Fetching command handler data
             const commandHandler = commandHandlers.get(commandName);
             // Checking if command inputs have all required fields
-            for (let expectation in commandHandler.expects) {
-                if (commandArgs[expectation] === undefined) {
-                    throw `Command \`${commandName}\` expects a/an \`${expectation}\` field in the input.\n\nUsage of \`${commandName}\`: \`${commandHandler.usage}\`  --  ${commandHandler.description}`;
+            for (let expectation of commandHandler.expects) {
+                console.log(expectation);
+                if (parsedCommandArgs[expectation] === undefined) {
+                    throw `Command \`${commandName}\` expects a/an \`${expectation}\` field in the input.\n\nUsage of \`${PREFIX}${commandName}\`: \`${commandHandler.usage}\`  --  ${commandHandler.description}`;
                 }
             }
             // Executing the command
@@ -39,7 +40,7 @@ export const onMessageCreateHandler = (client, message) => {
                 commandArgs: parsedCommandArgs,
                 commandHandler,
             });
-            if (status === "error") {
+            if (status === "error" && errorDescription) {
                 throw errorDescription;
             }
         }
